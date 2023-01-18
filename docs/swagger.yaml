@@ -1,0 +1,107 @@
+definitions:
+  models.BasicResponse:
+    properties:
+      message:
+        type: string
+      status:
+        type: integer
+      success:
+        type: boolean
+    type: object
+  models.History:
+    properties:
+      endDatetime:
+        type: string
+      startDatetime:
+        type: string
+    required:
+    - endDatetime
+    - startDatetime
+    type: object
+  models.Record:
+    properties:
+      amount:
+        type: number
+      datetime:
+        type: string
+    required:
+    - amount
+    - datetime
+    type: object
+info:
+  contact: {}
+paths:
+  /records:
+    post:
+      consumes:
+      - application/json
+      description: insert new transaction
+      parameters:
+      - description: Models of record
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.Record'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.BasicResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BasicResponse'
+      summary: Insert record for wallet balance
+      tags:
+      - wallets
+  /records/history:
+    post:
+      consumes:
+      - application/json
+      description: get history balance
+      parameters:
+      - description: Models of request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.History'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Record'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BasicResponse'
+      summary: Get History from start to end date time
+      tags:
+      - wallets
+  /records/latest:
+    get:
+      consumes:
+      - application/json
+      description: get lattest balance
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Record'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BasicResponse'
+      summary: Get Latest Balance
+      tags:
+      - wallets
+swagger: "2.0"
